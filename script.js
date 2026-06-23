@@ -1,221 +1,268 @@
 const questions = [
 
 {
-question:"What does HTML stand for?",
-answers:[
+question: "What does HTML stand for?",
+answers: [
 "Hyper Text Markup Language",
 "Home Tool Markup Language",
-"Hyper Tool Language",
-"Hyper Transfer Language"
+"Hyper Transfer Markup Language",
+"Hyper Main Language"
 ],
-correct:0
+correct: 0
 },
 
 {
-question:"Which language makes website interactive?",
-answers:[
+question: "Which language makes websites interactive?",
+answers: [
 "HTML",
 "CSS",
 "JavaScript",
 "Bootstrap"
 ],
-correct:2
+correct: 2
 },
 
 {
-question:"Which property changes text color?",
-answers:[
+question: "Which property changes text color?",
+answers: [
 "font-color",
 "text-color",
 "color",
 "background"
 ],
-correct:2
+correct: 2
 },
 
 {
-question:"Which tag creates a link?",
-answers:[
-"<img>",
-"<a>",
-"<p>",
-"<div>"
-],
-correct:1
-},
-
-{
-question:"Which company created JavaScript?",
-answers:[
-"Google",
-"Microsoft",
-"Netscape",
-"Apple"
-],
-correct:2
-},
-
-{
-question:"Which symbol starts ID selector?",
-answers:[
+question: "Which symbol is used for ID selector?",
+answers: [
 ".",
 "#",
-"*",
-"&"
+"&",
+"*"
 ],
-correct:1
+correct: 1
 },
 
 {
-question:"Which method prints in console?",
-answers:[
-"log()",
-"console.log()",
+question: "Which company created JavaScript?",
+answers: [
+"Apple",
+"Netscape",
+"Google",
+"Microsoft"
+],
+correct: 1
+},
+
+{
+question: "What does CSS stand for?",
+answers: [
+"Creative Style Sheets",
+"Color Style Sheets",
+"Cascading Style Sheets",
+"Computer Style Sheets"
+],
+correct: 2
+},
+
+{
+question: "Which tag creates a hyperlink?",
+answers: [
+"<img>",
+"<div>",
+"<a>",
+"<p>"
+],
+correct: 2
+},
+
+{
+question: "What does DOM mean?",
+answers: [
+"Document Object Model",
+"Data Object Model",
+"Digital Object Model",
+"Desktop Object Model"
+],
+correct: 0
+},
+
+{
+question: "Which method prints to console?",
+answers: [
+"console.print()",
 "print()",
+"console.log()",
 "show()"
 ],
-correct:1
+correct: 2
 },
 
 {
-question:"Array starts with?",
-answers:[
+question: "Which brackets are used for arrays?",
+answers: [
 "{}",
 "()",
 "[]",
 "<>"
 ],
-correct:2
-},
-
-{
-question:"CSS stands for?",
-answers:[
-"Cascading Style Sheets",
-"Computer Style Sheets",
-"Creative Style Sheets",
-"Color Style Sheets"
-],
-correct:0
-},
-
-{
-question:"DOM means?",
-answers:[
-"Document Object Model",
-"Data Object Model",
-"Digital Object Model",
-"Document Order Model"
-],
-correct:0
+correct: 2
 }
 
 ];
 
+// Random Questions
+
+questions.sort(() => Math.random() - 0.5);
+
 let currentQuestion = 0;
 let score = 0;
-let timer = 30;
-let interval;
+let selectedAnswer = null;
 
-if(document.getElementById("question")){
+const questionText =
+document.getElementById("questionText");
 
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
-const progressText = document.getElementById("progressText");
-const progressBar = document.getElementById("progressBar");
-const timerEl = document.getElementById("timer");
+const answersContainer =
+document.getElementById("answersContainer");
+
+const questionNumber =
+document.getElementById("questionNumber");
+
+const progressBar =
+document.getElementById("progressBar");
+
+const nextBtn =
+document.getElementById("nextBtn");
+
+const timerBox =
+document.getElementById("timerBox");
+
+let timeLeft = 100;
+let timer;
+
+// ==========================
+// QUESTION PAGE
+// ==========================
+
+if(questionText){
 
 loadQuestion();
 
-function loadQuestion(){
-
-clearInterval(interval);
-
-timer = 30;
-
 startTimer();
 
-let q = questions[currentQuestion];
+nextBtn.addEventListener("click", nextQuestion);
 
-questionEl.innerText = q.question;
+}
 
-progressText.innerText =
-`Question ${currentQuestion+1} / ${questions.length}`;
+// ==========================
+// LOAD QUESTION
+// ==========================
+
+function loadQuestion(){
+
+selectedAnswer = null;
+
+const q = questions[currentQuestion];
+
+questionText.textContent = q.question;
+
+questionNumber.textContent =
+`Question ${currentQuestion + 1} / ${questions.length}`;
 
 progressBar.style.width =
-`${((currentQuestion+1)/questions.length)*100}%`;
+`${((currentQuestion + 1) / questions.length) * 100}%`;
 
-answersEl.innerHTML="";
+answersContainer.innerHTML = "";
 
 q.answers.forEach((answer,index)=>{
 
-const btn=document.createElement("button");
+const button =
+document.createElement("button");
 
-btn.classList.add("answer");
+button.classList.add("answer-btn");
 
-btn.innerText=answer;
+button.textContent = answer;
 
-btn.onclick=()=>selectAnswer(index);
+button.addEventListener("click",()=>{
 
-answersEl.appendChild(btn);
+document
+.querySelectorAll(".answer-btn")
+.forEach(btn => {
+
+btn.style.pointerEvents = "none";
+
+});
+
+selectedAnswer = index;
+
+if(index === q.correct){
+
+button.classList.add("correct");
+
+score++;
+
+}else{
+
+button.classList.add("wrong");
+
+document
+.querySelectorAll(".answer-btn")
+[q.correct]
+.classList.add("correct");
+
+}
+
+});
+
+answersContainer.appendChild(button);
 
 });
 
 }
 
-function selectAnswer(index){
+// ==========================
+// NEXT QUESTION
+// ==========================
 
-if(index===questions[currentQuestion].correct){
-score++;
+function nextQuestion(){
+
+if(selectedAnswer === null){
+return;
 }
 
 currentQuestion++;
 
-if(currentQuestion<questions.length){
+if(currentQuestion < questions.length){
 
 loadQuestion();
 
 }else{
 
-localStorage.setItem("score",score);
+finishQuiz();
 
-let best =
-localStorage.getItem("bestScore") || 0;
-
-if(score > best){
-localStorage.setItem("bestScore",score);
-}
-
-window.location="final.html";
 }
 
 }
+
+// ==========================
+// TIMER
+// ==========================
 
 function startTimer(){
 
-timerEl.innerText=timer;
+timer = setInterval(()=>{
 
-interval=setInterval(()=>{
+timeLeft--;
 
-timer--;
+timerBox.textContent =
+`⏱ ${timeLeft}`;
 
-timerEl.innerText=timer;
+if(timeLeft <= 0){
 
-if(timer===0){
+clearInterval(timer);
 
-currentQuestion++;
-
-if(currentQuestion<questions.length){
-
-loadQuestion();
-
-}else{
-
-localStorage.setItem("score",score);
-
-window.location="final.html";
-
-}
+finishQuiz();
 
 }
 
@@ -223,13 +270,69 @@ window.location="final.html";
 
 }
 
+// ==========================
+// FINISH QUIZ
+// ==========================
+
+function finishQuiz(){
+
+localStorage.setItem(
+"quizScore",
+score
+);
+
+let bestScore =
+localStorage.getItem("bestScore") || 0;
+
+if(score > bestScore){
+
+localStorage.setItem(
+"bestScore",
+score
+);
+
 }
 
-if(document.getElementById("finalScore")){
+window.location.href =
+"final.html";
 
-document.getElementById("finalScore").innerText=
-`${localStorage.getItem("score")} / 10`;
+}
 
-document.getElementById("bestScore").innerText=
-`Best Score : ${localStorage.getItem("bestScore") || 0}`;
+// ==========================
+// FINAL PAGE
+// ==========================
+
+const finalScore =
+document.getElementById("finalScore");
+
+if(finalScore){
+
+const score =
+Number(
+localStorage.getItem("quizScore")
+);
+
+const bestScore =
+localStorage.getItem("bestScore");
+
+const percentage =
+Math.round(
+(score / questions.length) * 100
+);
+
+document.getElementById(
+"finalScore"
+).textContent =
+`${score} / ${questions.length}`;
+
+document.getElementById(
+"percentage"
+).textContent =
+`${percentage}%`;
+
+document.getElementById(
+"bestScore"
+).textContent =
+bestScore;
+
 }

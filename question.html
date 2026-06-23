@@ -1,53 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Questions</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 
-<title>Questions</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<div class="quiz-container">
+    <div class="background-glow glow-1"></div>
+    <div class="background-glow glow-2"></div>
 
-<div class="top">
+    <div class="quiz-wrapper">
 
-<div id="progressText">
-Question 1 / 10
-</div>
+        <!-- Header -->
 
-<div id="timer">
-30
-</div>
+        <div class="quiz-header">
 
-</div>
+            <div id="questionNumber">
+                Question 1 / 10
+            </div>
 
-<div class="progress">
+            <div id="timerBox">
+                ⏱ 30
+            </div>
 
-<div id="progressBar"></div>
+        </div>
 
-</div>
+        <!-- Progress Bar -->
 
-<h2 id="question">
-Question Here
-</h2>
+        <div class="progress-container">
 
-<div id="answers">
+            <div id="progressBar"></div>
 
-</div>
+        </div>
 
-<button id="nextBtn" class="btn">
-Next Question
-</button>
+        <!-- Question Card -->
 
-</div>
+        <div class="question-card">
 
-<script src="script.js"></script>
+            <h2 id="questionText">
+                Loading Question...
+            </h2>
+
+        </div>
+
+        <!-- Answers -->
+
+        <div id="answersContainer">
+
+        </div>
+
+        <!-- Next Button -->
+
+        <div class="btn-container">
+
+            <button id="nextBtn">
+                Next Question →
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
 
 </body>
 </html>
